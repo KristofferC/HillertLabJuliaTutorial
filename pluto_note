@@ -1,0 +1,79 @@
+### A Pluto.jl notebook ###
+# v0.19.22
+
+using Markdown
+using InteractiveUtils
+
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
+
+# ╔═╡ 75fe1eaa-62bf-44fd-919f-51c8891ccf64
+# ╠═╡ show_logs = false
+begin
+	import Pkg
+	Pkg.activate(".")
+end
+
+# ╔═╡ c8ba55f4-1b9a-4801-bcac-b621ba5f2e79
+# setup
+begin
+	using Plots
+	using DifferentialEquations
+end
+
+# ╔═╡ f66d8115-cf3d-4ed7-8728-c475723eb44c
+# Works like Excel
+a = 10
+
+# ╔═╡ 143d370c-6d69-4da0-95ca-de3039726e37
+b = 10
+
+# ╔═╡ 61117020-6ace-416a-b410-96cde8e3ce3d
+a + b
+
+# ╔═╡ b372e2c6-bf3f-46da-803b-437c3d36d48b
+function lorenz!(du,u,p,t)
+    σ,ρ,β = p
+    du[1] = σ*(u[2]-u[1])
+    du[2] = u[1]*(ρ-u[3]) - u[2]
+    du[3] = u[1]*u[2] - β*u[3]
+end
+
+# ╔═╡ 17974a31-a868-41e4-b370-87bf74761b1b
+@bind p3 html"<input type=range>"
+
+# ╔═╡ f30f0110-e973-4c7a-a9cd-39eaaaa0cd30
+p3
+
+# ╔═╡ b3b82964-4cdb-41c8-95cf-eb6316da2fb8
+begin
+	u0 = [1.0,0.0,0.0]
+	p = (10,28,p3)
+	tspan = (0.0,50.0)
+end
+
+# ╔═╡ 93637e40-d206-11ed-19f0-4d764fcde9fa
+begin
+	prob = ODEProblem(lorenz!,u0,tspan, p)
+	sol = solve(prob)
+	plot(sol,idxs=(1,2,3), lw=1)
+end
+
+# ╔═╡ Cell order:
+# ╟─75fe1eaa-62bf-44fd-919f-51c8891ccf64
+# ╠═c8ba55f4-1b9a-4801-bcac-b621ba5f2e79
+# ╠═f66d8115-cf3d-4ed7-8728-c475723eb44c
+# ╠═61117020-6ace-416a-b410-96cde8e3ce3d
+# ╠═143d370c-6d69-4da0-95ca-de3039726e37
+# ╠═b372e2c6-bf3f-46da-803b-437c3d36d48b
+# ╠═17974a31-a868-41e4-b370-87bf74761b1b
+# ╠═f30f0110-e973-4c7a-a9cd-39eaaaa0cd30
+# ╠═b3b82964-4cdb-41c8-95cf-eb6316da2fb8
+# ╠═93637e40-d206-11ed-19f0-4d764fcde9fa
